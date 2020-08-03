@@ -16,5 +16,5 @@ class User(db.Model):
     phone_number = db.Column(db.Integer, nullable=False)
     user_info = db.Column(db.String(2000))
     createdAt = db.Column(db.DateTime)
-    updateddAt = db.Column(db.DateTime)
+    updatedAt = db.Column(db.DateTime)
     hashed_password = db.Column(db.String(100), nullable=False)
