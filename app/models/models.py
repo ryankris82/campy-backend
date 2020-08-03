@@ -17,8 +17,8 @@ class User(db.Model, UserMixin):
     domicile_type = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.Integer, nullable=False)
     user_info = db.Column(db.String(2000))
-    createdAt = db.Column(db.)
-    updateddAt = db.Column(db.)
+    createdAt = db.Column(db.DateTime)
+    updatedAt = db.Column(db.DateTime)
     hashed_password = db.Column(db.String(100), nullable=False)
 
     @property
