@@ -79,3 +79,19 @@ def edit_location(location_id):
 
         # commit the above changes to the database
         db.session.commit()
+
+@bp.route("/<int:location_id", methods=['DELETE'])
+# Delete a location and it's dependent Amenities and Necessities rows.
+def delete_location_by_id(location_id):
+    if request.id == location_id:
+        # obtain the 3 rows of data in these 3 rel. tables (location, amenities, and necessities)
+        location_to_del = Location.query.filter_by(location_id).first()
+        amenities_to_del = Amenities.query.filter_by(location_to_del.amenities_id).first()
+        necessities_to_del = Necessities.query.filter_by(location_to_del.necessities_id).first()
+
+        # look into way to DRY up these 3 lines
+        db.session.delete(necessities_to_del)
+        db.session.delete(amenities_to_del)
+        db.session.delete(location_to_del)
+
+        db.session.commit()
