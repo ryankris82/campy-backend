@@ -1,7 +1,7 @@
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import func
 from datetime import datetime
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 db = SQLAlchemy()
@@ -16,7 +16,7 @@ db = SQLAlchemy()
 
 # l = Location(address='asdf', city='asdf', state='ca', gps_coords='asdf')
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -30,6 +30,17 @@ class User(db.Model):
     user_info = db.Column(db.String(2000))
     createdAt = db.Column(db.DateTime, default=datetime.utcnow)
     updatedAt = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+
+    @property
+    def password(self):
+        return self.hashed_password
+
+    @password.setter
+    def password(self, password):
+        self.hashed_password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 class Calendar(db.Model):
@@ -148,3 +159,4 @@ class Review(db.Model):
         nullable=False)
     
     user = db.relationship('User', backref='review', lazy=True)
+
