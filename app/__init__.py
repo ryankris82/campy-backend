@@ -15,8 +15,8 @@ Migrate(app, db)
 # pipenv run flask db upgrade
 
 # TODO add routes here
-app.register_blueprint(users.bp)
-app.register_blueprint(session.bp)
+# app.register_blueprint(users.bp)
+# app.register_blueprint(session.bp)
 
 login = LoginManager(app)
 login.login_view = "session.login"
