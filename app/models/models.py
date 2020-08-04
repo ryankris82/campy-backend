@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -82,39 +83,6 @@ class Trip(db.Model):
     user = db.relationship('User', backref='trip', lazy=True)
 
 
-class Location(db.Model):
-    __tablename__ = 'locations'
-
-    id = db.Column(db.Integer, primary_key=True)
-    address = db.Column(db.String(100), nullable=False)
-    city = db.Column(db.String(50), nullable=False)
-    state = db.Column(db.String(20), nullable=False)
-    gps_coords = db.Column(db.String(100), nullable=False)
-    images = db.Column(db.ARRAY(db.String(255)))
-    # ARRAY types only supported in Postgres
-    website = db.Column(db.String(255))
-    description = db.Column(db.String(2000))
-    host_notes = db.Column(db.String(2000))
-    active = db.Column(db.Boolean, default=True)
-    amenity_id = db.Column(db.Integer,
-        db.ForeignKey('amenities.id'),
-        nullable=False)
-    review_id = db.Column(db.Integer,
-        db.ForeignKey('reviews.id'),
-        nullable=False)
-    user_id = db.Column(db.Integer,
-        db.ForeignKey('users.id'),
-        nullable=False)
-    necessity_id = db.Column(db.Integer,
-        db.ForeignKey('necessities.id'),
-        nullable=False)
-    
-    amenity = db.relationship('Amenity', backref='location', lazy=True)
-    review = db.relationship('Review', backref='location', lazy=True)
-    user = db.relationship('User', backref='location', lazy=True)
-    necessities = db.relationship('Necessity', backref='location', lazy=True)
-
-
 class Amenity(db.Model):
     __tablename__ = 'amenities'
 
@@ -141,6 +109,35 @@ class Necessity(db.Model):
     pad_type = db.Column(db.String(100))
 
 
+class Location(db.Model):
+    __tablename__ = 'locations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String(100), nullable=False)
+    city = db.Column(db.String(50), nullable=False)
+    state = db.Column(db.String(20), nullable=False)
+    gps_coords = db.Column(db.String(100), nullable=False)
+    images = db.Column(db.ARRAY(db.String(255)))
+    # ARRAY types only supported in Postgres
+    website = db.Column(db.String(255))
+    description = db.Column(db.String(2000))
+    host_notes = db.Column(db.String(2000))
+    active = db.Column(db.Boolean, default=True)
+    amenity_id = db.Column(db.Integer,
+        db.ForeignKey('amenities.id'),
+        nullable=False)
+    user_id = db.Column(db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False)
+    necessity_id = db.Column(db.Integer,
+        db.ForeignKey('necessities.id'),
+        nullable=False)
+    
+    amenity = db.relationship('Amenity', backref='location', lazy=True)
+    user = db.relationship('User', backref='location', lazy=True)
+    necessities = db.relationship('Necessity', backref='location', lazy=True)
+
+
 class Review(db.Model):
     __tablename__ = 'reviews'
 
@@ -157,6 +154,10 @@ class Review(db.Model):
     user_id = db.Column(db.Integer,
         db.ForeignKey('users.id'),
         nullable=False)
+    location_id = db.Column(db.Integer,
+        db.ForeignKey('locations.id'),
+        nullable=False)
     
     user = db.relationship('User', backref='review', lazy=True)
+    location = db.relationship('Location', backref='review', lazy=True)
 

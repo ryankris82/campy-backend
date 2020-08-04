@@ -17,6 +17,8 @@ psycopg2-binary = "*"
 wtforms = "*"
 flask-wtf = "*"
 flask-login = "*"
+alembic = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.8"
