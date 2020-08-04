@@ -19,6 +19,7 @@ flask-wtf = "*"
 flask-login = "*"
 alembic = "*"
 flask-migrate = "*"
+flask-restful = "*"
 
 [requires]
 python_version = "3.8"
