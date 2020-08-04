@@ -6,6 +6,15 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+# from app.models.models import Trip, User
+
+# u = User(first_name='arom', last_name='jhee', email='arom@arom.com', domicile_type='car', phone_number=9496511562, hashed_password='asdfasdf')
+
+# c = Calendar(start_date='2020-07-20', end_date='2020-08-20')
+
+# t = Trip(starting_address='adsf', starting_city='asdf', starting_state='ca', ending_address='adf', ending_city='cadf', ending_state='ca')
+
+# l = Location(address='asdf', city='asdf', state='ca', gps_coords='asdf')
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -13,20 +22,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
+    hashed_password = db.Column(db.String(100), nullable=False)
     image = db.Column(db.String(255))
     email = db.Column(db.String(100), unique=True, nullable=False)
     domicile_type = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.Integer, nullable=False)
     user_info = db.Column(db.String(2000))
-    createdAt = db.Column(
-        db.DateTime, default=datetime.utcnow)
-    updatedAt = db.Column(
-        db.DateTime(timezone=True), onupdate=func.now())
-    hashed_password = db.Column(db.String(100), nullable=False)
-
-    trips = db.relationship('Trip', backref='user', lazy=True)
-    # backref means that when we query Trip, we can call Trip.user to get the user of that trip
-    # lazy=True means sqlalchemy will load all trips made by a user
+    createdAt = db.Column(db.DateTime, default=datetime.utcnow)
+    updatedAt = db.Column(db.DateTime(timezone=True), onupdate=func.now())
 
 
 class Calendar(db.Model):
@@ -35,14 +38,20 @@ class Calendar(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
-    location_id = db.Column(
-        db.Integer,
+    location_id = db.Column(db.Integer,
         db.ForeignKey('locations.id'),
         nullable=False)
-    user_id = db.Column(
-        db.Integer,
+    user_id = db.Column(db.Integer,
         db.ForeignKey('users.id'),
         nullable=False)
+    
+    user = db.relationship('User', backref='calendar', lazy=True)
+    # backref establishes parent.children AND children.parent relationship meaning...
+    # if you add <User instance> to <Calendar instance> by <Calendar instance>.user = <User instance>
+    # then you will be able to also call <User instance>.calendar
+    # <User instance>.calendar equals a LIST, so if you want to key into <Calendar instance>...
+    # you must index into it by <User instance>.calendar[0].start_date
+    locations = db.relationship('Location', backref='location', lazy=True)
 
 
 class Trip(db.Model):
@@ -55,10 +64,11 @@ class Trip(db.Model):
     ending_address = db.Column(db.String(100), nullable=False)
     ending_city = db.Column(db.String(50), nullable=False)
     ending_state = db.Column(db.String(20), nullable=False)
-    user_id = db.Column(
-        db.Integer,
+    user_id = db.Column(db.Integer,
         db.ForeignKey('users.id'),
         nullable=False)
+    
+    user = db.relationship('User', backref='trip', lazy=True)
 
 
 class Location(db.Model):
@@ -75,22 +85,23 @@ class Location(db.Model):
     description = db.Column(db.String(2000))
     host_notes = db.Column(db.String(2000))
     active = db.Column(db.Boolean, default=True)
-    amenity_id = db.Column(
-        db.Integer,
+    amenity_id = db.Column(db.Integer,
         db.ForeignKey('amenities.id'),
         nullable=False)
-    review_id = db.Column(
-        db.Integer,
+    review_id = db.Column(db.Integer,
         db.ForeignKey('reviews.id'),
         nullable=False)
-    user_id = db.Column(
-        db.Integer,
+    user_id = db.Column(db.Integer,
         db.ForeignKey('users.id'),
         nullable=False)
-    necessity_id = db.Column(
-        db.Integer,
+    necessity_id = db.Column(db.Integer,
         db.ForeignKey('necessities.id'),
         nullable=False)
+    
+    amenity = db.relationship('Amenity', backref='location', lazy=True)
+    review = db.relationship('Review', backref='location', lazy=True)
+    user = db.relationship('User', backref='location', lazy=True)
+    necessities = db.relationship('Necessity', backref='location', lazy=True)
 
 
 class Amenity(db.Model):
@@ -130,7 +141,10 @@ class Review(db.Model):
     access = db.Column(db.Integer)
     site_quality = db.Column(db.Integer)
     comments = db.Column(db.String(2000))
-    createdAt = db.Column(
-        db.DateTime, default=datetime.utcnow)
-    updatedAt = db.Column(
-        db.DateTime(timezone=True), onupdate=func.now())
+    createdAt = db.Column(db.DateTime, default=datetime.utcnow)
+    updatedAt = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    user_id = db.Column(db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False)
+    
+    user = db.relationship('User', backref='review', lazy=True)
