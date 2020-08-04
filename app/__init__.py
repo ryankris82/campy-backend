@@ -1,11 +1,13 @@
 from flask import Flask
 from app.config import Configuration
 from flask_login import LoginManager
-from models.User import db, User
+from app.models.models import db, User
 from app.routes import session, users
 
 app = Flask(__name__)
 app.config.from_object(Configuration)
+db.init_app(app)
+Migrate(app, db)
 
 # TODO add routes here
 app.register_blueprint(users.bp)
