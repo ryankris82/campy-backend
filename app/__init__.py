@@ -5,9 +5,13 @@ from app.models.models import db, User
 from app.routes import session, users
 from flask_migrate import Migrate
 
+
 app = Flask(__name__)
+
+
 app.config.from_object(Configuration)
 db.init_app(app)
+
 Migrate(app, db)
 # run only the last command
 # pipenv run flask db init

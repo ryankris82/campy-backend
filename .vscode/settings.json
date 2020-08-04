@@ -1,3 +1,8 @@
 {
-    "python.pythonPath": "/Users/aromjhee/.pyenv/versions/3.8.2/bin/python"
+    "python.pythonPath": "/usr/bin/python3",
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#422714",
+        "titleBar.activeBackground": "#5C371D",
+        "titleBar.activeForeground": "#FDFAF8"
+    }
 }
