@@ -27,7 +27,7 @@ class User(db.Model, UserMixin):
     image = db.Column(db.String(255))
     email = db.Column(db.String(100), unique=True, nullable=False)
     domicile_type = db.Column(db.String(100), nullable=False)
-    phone_number = db.Column(db.String(50), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
     user_info = db.Column(db.String(2000))
     createdAt = db.Column(db.DateTime, default=datetime.utcnow)
     updatedAt = db.Column(db.DateTime(timezone=True), onupdate=func.now())
