@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, jsonify
-from app.models import db, Location, Amenities, Necessities
+from app.models.models import db, Location, Amenities, Necessities
 
 bp = Blueprint("location", __name__, url_prefix="/location")
 
