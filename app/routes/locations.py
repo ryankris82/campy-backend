@@ -16,7 +16,7 @@ def get_location(location_id):
 
 @bp.route("/", methods=["POST"])
 def create_location():
-    # obtain form data for location
+    # obtain request data for location
     if request:
         data = request # obtain data from the form
         # construct of location with form data
@@ -31,5 +31,51 @@ def create_location():
     else:
         return jsonify("Bad Data")
 
-@bp.route("/", methods=["PUT"])
+@bp.route("/<int:location_id>", methods=["PUT"])
 # Update a location with new data
+def edit_location(location_id):
+    # Get the location to edit by id
+    if request.id == location_id:
+        data = request
+        # Get the location to update by its id
+        updateLoc = Location.query.filter_by(id=location_id).first()
+        # Get the amenities by the location's foreign key for amenities
+        updateAmen = Amenities.query.filter_by(id=updateLoc.amenities_id).first()
+        # Get the amenities by the location's foreign key for necessities
+        updateNeci = Necessities.query.filter_by(id=updateLoc.necessities_id).first()
+
+        # update the retrieved rows in these tables (location, amenities, and necessities) with the request data
+        updateLoc = {
+            'address': data.address,
+            'city': data.city,
+            'state': data.state,
+            'gps_coords': data.gps_coords,
+            'images': data.images,
+            'website': data.website,
+            'description': data.description,
+            'host_notes': data.host_notes,
+            'active': data.active,
+        }
+
+        updateAmen = {
+            'electric_hookup': data.electric_hookup,
+            'water_hookup': data.water_hookup,
+            'septic_hookup': data.septic_hookup,
+            'assigned_parking': data.assigned_parking,
+            'tow_vehicle_parking': data.tow_vehicle_parking,
+            'trash_removal': data.trash_removal,
+            'water_front': data.water_front,
+            'pets_allowed': data.pets_allowed,
+            'internet_access': data.internet_access,
+        }
+
+        updateNeci = {
+            'rv_compatible': data.electric_hookup,
+            'generators_allowed': data.generators_allowed,
+            'fires_allowed': data.fires_allowed,
+            'max_days': data.max_days,
+            'pad_type': data.pad_type,
+        }
+
+        # commit the above changes to the database
+        db.session.commit()
