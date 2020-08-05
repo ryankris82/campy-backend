@@ -1,6 +1,5 @@
 from flask import Flask
 from app.config import Configuration
-from flask_login import LoginManager
 from app.models.models import db, User
 from app.routes import users, auth
 from flask_migrate import Migrate
