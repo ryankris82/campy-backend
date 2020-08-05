@@ -34,6 +34,17 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+    def __repr__(self):
+        return f'User with {self.email} and {self.password}'
+
+    def to_dictionary(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "image": self.image,
+            "user_info": self.user_info,
+        }
+
 
 class Calendar(db.Model):
     __tablename__ = 'calendar'
@@ -47,7 +58,7 @@ class Calendar(db.Model):
     user_id = db.Column(db.Integer,
         db.ForeignKey('users.id'),
         nullable=False)
-    
+
     user = db.relationship('User', backref='calendar', lazy=True)
     # backref establishes parent.children AND children.parent relationship meaning...
     # if you add <User instance> to <Calendar instance> by <Calendar instance>.user = <User instance>
@@ -70,7 +81,7 @@ class Trip(db.Model):
     user_id = db.Column(db.Integer,
         db.ForeignKey('users.id'),
         nullable=False)
-    
+
     user = db.relationship('User', backref='trip', lazy=True)
 
 
@@ -123,7 +134,7 @@ class Location(db.Model):
     necessity_id = db.Column(db.Integer,
         db.ForeignKey('necessities.id'),
         nullable=False)
-    
+
     amenity = db.relationship('Amenity', backref='location', lazy=True)
     user = db.relationship('User', backref='location', lazy=True)
     necessities = db.relationship('Necessity', backref='location', lazy=True)
@@ -148,7 +159,6 @@ class Review(db.Model):
     location_id = db.Column(db.Integer,
         db.ForeignKey('locations.id'),
         nullable=False)
-    
+
     user = db.relationship('User', backref='review', lazy=True)
     location = db.relationship('Location', backref='review', lazy=True)
-

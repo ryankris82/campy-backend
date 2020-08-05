@@ -19,6 +19,8 @@ flask-wtf = "*"
 flask-login = "*"
 alembic = "*"
 flask-migrate = "*"
+flask-restful = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3.8"
