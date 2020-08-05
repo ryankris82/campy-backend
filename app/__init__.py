@@ -20,22 +20,8 @@ Migrate(app, db)
 # pipenv run flask db upgrade
 
 # TODO add routes here
-<<<<<<< HEAD
-# app.register_blueprint(users.bp)
-# app.register_blueprint(session.bp)
-
-login = LoginManager(app)
-login.login_view = "session.login"
-
-
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
-
-=======
 app.register_blueprint(users.bp)
 app.register_blueprint(auth.bp)
->>>>>>> master
 
 @app.route('/')
 def index():
