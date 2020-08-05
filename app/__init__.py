@@ -5,12 +5,13 @@ from app.routes import users, auth, locations
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 
+from app.routes.auth import bp as api
+
 app = Flask(__name__)
 
 jwt = JWTManager(app)
 app.config.from_object(Configuration)
 db.init_app(app)
-
 
 Migrate(app, db)
 # run only the last command
@@ -19,10 +20,6 @@ Migrate(app, db)
 # pipenv run flask db upgrade
 
 # TODO add routes here
-app.register_blueprint(users.bp)
-app.register_blueprint(auth.bp)
-app.register_blueprint(locations.bp)
-
-@app.route('/')
-def index():
-    return 'hello'
+# app.register_blueprint(users.bp)
+app.register_blueprint(api)
+# app.register_blueprint(locations.bp)
