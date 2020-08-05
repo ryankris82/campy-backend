@@ -1,14 +1,16 @@
 from flask import Blueprint, url_for, redirect, request, jsonify
 from app.models.models import db, Location, Amenity, Necessity
 from flask_jwt_extended import  jwt_required
+# from app import api
 
 bp = Blueprint("locations", __name__, url_prefix="/locations")
 
-@bp.route("/", methods=["GET"])
-def get_all_locations():
-    locations = Location.query.all()
-    data = [location.to_dictionary() for location in locations]
-    return {"locations":data}
+# @api.route("/", methods=["GET"])
+# class Location(Re)
+# def get_all_locations():
+#     locations = Location.query.all()
+#     data = [location.to_dictionary() for location in locations]
+#     return {"locations":data}
 
 # @bp.route("/", methods=["GET"])
 # def get_location(location_id):

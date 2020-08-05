@@ -18,6 +18,7 @@ alembic = "*"
 flask-migrate = "*"
 flask-restful = "*"
 flask-jwt-extended = "*"
+flask-restx = "*"
 
 [requires]
 python_version = "3.8"
