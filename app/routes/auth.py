@@ -25,7 +25,7 @@ def signup():
             domicile_type=domicile_type,
             phone_number=phoneNumber
             )
-        print("user====>", user)
+
         db.session.add(user)
         db.session.commit()
         return jsonify(message="successfully created user."), 201
