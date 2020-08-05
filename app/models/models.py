@@ -7,15 +7,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
-# from app.models.models import Trip, User
-
-# u = User(first_name='arom', last_name='jhee', email='arom@arom.com', domicile_type='car', phone_number=9496511562, hashed_password='asdfasdf')
-
-# c = Calendar(start_date='2020-07-20', end_date='2020-08-20')
-
-# t = Trip(starting_address='adsf', starting_city='asdf', starting_state='ca', ending_address='adf', ending_city='cadf', ending_state='ca')
-
-# l = Location(address='asdf', city='asdf', state='ca', gps_coords='asdf')
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -27,7 +18,7 @@ class User(db.Model, UserMixin):
     image = db.Column(db.String(255))
     email = db.Column(db.String(100), unique=True, nullable=False)
     domicile_type = db.Column(db.String(100), nullable=False)
-    phone_number = db.Column(db.Integer, nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
     user_info = db.Column(db.String(2000))
     createdAt = db.Column(db.DateTime, default=datetime.utcnow)
     updatedAt = db.Column(db.DateTime(timezone=True), onupdate=func.now())
