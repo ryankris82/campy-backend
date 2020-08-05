@@ -1,7 +1,7 @@
 from flask import Flask
 from app.config import Configuration
 from app.models.models import db, User
-from app.routes import users, auth
+from app.routes import users, auth, locations
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 
@@ -21,6 +21,7 @@ Migrate(app, db)
 # TODO add routes here
 app.register_blueprint(users.bp)
 app.register_blueprint(auth.bp)
+app.register_blueprint(locations.bp)
 
 @app.route('/')
 def index():

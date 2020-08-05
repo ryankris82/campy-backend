@@ -42,7 +42,6 @@ class User(db.Model):
             "user_info": self.user_info,
         }
 
-
 class Calendar(db.Model):
     __tablename__ = 'calendar'
 
@@ -135,6 +134,22 @@ class Location(db.Model):
     amenity = db.relationship('Amenity', backref='location', lazy=True)
     user = db.relationship('User', backref='location', lazy=True)
     necessities = db.relationship('Necessity', backref='location', lazy=True)
+
+    def __repr__(self):
+        return f'<Location: {self.address} - {self.city} - {self.state} - {self.gps_coords} >'
+
+    def to_dictionary(self):
+        return {
+            "id": self.id,
+            "address": self.address,
+            "city": self.city,
+            "gps_coords": self.gps_coords,
+            "images": self.images,
+            "website": self.website,
+            "description": self.description,
+            "host_notes": self.host_notes,
+            "active": self.active,
+        }
 
 
 class Review(db.Model):
