@@ -46,6 +46,11 @@ def login():
         valid= user.check_password(password)
         if valid:
             access_token = create_access_token(identity=email)
-            return jsonify( message = "Login successful!", access_token=access_token)
+            return jsonify(
+                access_token=access_token,
+                user_id=user.id,
+                user_first_name=user.first_name,
+                user_last_name=user.last_name,
+                )
     else:
         return jsonify( message = "Bad email or password."), 401
