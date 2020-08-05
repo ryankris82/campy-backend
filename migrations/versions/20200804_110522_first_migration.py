@@ -1,7 +1,7 @@
 """first migration
 
 Revision ID: 7981836fc528
-Revises: 
+Revises:
 Create Date: 2020-08-04 11:05:22.886627
 
 """
@@ -48,7 +48,7 @@ def upgrade():
     sa.Column('image', sa.String(length=255), nullable=True),
     sa.Column('email', sa.String(length=100), nullable=False),
     sa.Column('domicile_type', sa.String(length=100), nullable=False),
-    sa.Column('phone_number', sa.Integer(), nullable=False),
+    sa.Column('phone_number', sa.String(length=20), nullable=False),
     sa.Column('user_info', sa.String(length=2000), nullable=True),
     sa.Column('createdAt', sa.DateTime(), nullable=True),
     sa.Column('updatedAt', sa.DateTime(timezone=True), nullable=True),
