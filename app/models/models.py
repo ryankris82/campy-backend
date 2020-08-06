@@ -121,19 +121,13 @@ class Location(db.Model):
     description = db.Column(db.String(2000))
     host_notes = db.Column(db.String(2000))
     active = db.Column(db.Boolean, default=True)
-    amenity_id = db.Column(db.Integer,
-        db.ForeignKey('amenities.id'),
-        nullable=False)
-    user_id = db.Column(db.Integer,
-        db.ForeignKey('users.id'),
-        nullable=False)
-    necessity_id = db.Column(db.Integer,
-        db.ForeignKey('necessities.id'),
-        nullable=False)
+    amenity_id = db.Column(db.Integer, db.ForeignKey('amenities.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    necessity_id = db.Column(db.Integer, db.ForeignKey('necessities.id'), nullable=False)
 
     amenity = db.relationship('Amenity', backref='location', lazy=True)
     user = db.relationship('User', backref='location', lazy=True)
-    necessities = db.relationship('Necessity', backref='location', lazy=True)
+    necessity = db.relationship('Necessity', backref='location', lazy=True)
 
     def __repr__(self):
         return f'<Location: {self.address} - {self.city} - {self.state} - {self.gps_coords} >'
@@ -143,12 +137,30 @@ class Location(db.Model):
             "id": self.id,
             "address": self.address,
             "city": self.city,
+            "state": self.state,
             "gps_coords": self.gps_coords,
             "images": self.images,
             "website": self.website,
             "description": self.description,
             "host_notes": self.host_notes,
             "active": self.active,
+            "host_first_name": self.user.first_name,
+            "host_last_name": self.user.last_name,
+            "host_info": self.user.user_info,
+            "electric_hookup": self.amenity.electric_hookup,
+            "water_hookup": self.amenity.water_hookup,
+            "septic_hookup": self.amenity.septic_hookup,
+            "assigned_parking": self.amenity.assigned_parking,
+            "tow_vehicle_parking": self.amenity.tow_vehicle_parking,
+            "trash_removal": self.amenity.trash_removal,
+            "water_front": self.amenity.water_front,
+            "pets_allowed": self.amenity.pets_allowed,
+            "internet_access": self.amenity.internet_access,
+            "rv_compatible": self.necessity.rv_compatible,
+            "generators_allowed": self.necessity.generators_allowed,
+            "fires_allowed": self.necessity.fires_allowed,
+            "max_days": self.necessity.max_days,
+            "pad_type": self.necessity.pad_type,
         }
 
 

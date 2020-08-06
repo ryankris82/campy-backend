@@ -1,29 +1,27 @@
-from flask import Blueprint, redirect, url_for, request, jsonify
+from flask import Blueprint, redirect, url_for, request
 from app.models.models import db, User
 from flask_jwt_extended import  JWTManager, jwt_required, create_access_token
-from flask_restx import Api, Resource, Namespace, fields
+from flask_restx import Resource, Namespace, fields
 
 
-
-bp = Blueprint("auth", __name__)
-api = Api(bp)
-
-signup_model = api.model("Registration", {
-                            "firstName": fields.String("User first name."),
-                            "lastName": fields.String("User last name."),
-                            "email": fields.String("Unique email address."),
-                            "password": fields.String("User Password."),
-                            "domicileType": fields.String("User domicile type."),
-                            "phoneNumber": fields.String("User phone number."),
-                            })
+api = Namespace('', description='Authorization related operations')
 
 login_model = api.model("Login", {
-                            "email": fields.String("Unique email address."),
-                            "password": fields.String("User Password."),
+                            "email": fields.String(required=True, description="Unique email address."),
+                            "password": fields.String(required=True, description="User Password."),
                             })
+
+signup_model = api.clone("Signup", login_model, {
+                            "firstName": fields.String(required=True, description="User first name."),
+                            "lastName": fields.String(required=True, description="User last name."),
+                            "domicileType": fields.String(required=True, description="User domicile type."),
+                            "phoneNumber": fields.String(required=True, description="User phone number."),
+                            })
+
 
 @api.route("/signup")
 class Signup(Resource):
+    @api.doc('signup_user')
     @api.expect(signup_model)
     def post(self):
         email = api.payload["email"]
