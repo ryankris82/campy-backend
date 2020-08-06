@@ -4,7 +4,7 @@ from flask_jwt_extended import  JWTManager, create_access_token
 from flask_restx import Resource, Namespace, fields
 
 
-api = Namespace('', description='Authorization related operations')
+api = Namespace('auth', description='User authorization related operations')
 
 login_model = api.model("Login", {
                             "email": fields.String(required=True, description="Unique email address."),
@@ -24,6 +24,7 @@ class Signup(Resource):
     @api.doc('signup_user')
     @api.expect(signup_model)
     def post(self):
+        '''Create a user record on a signup'''
         email = api.payload["email"]
         password = api.payload["password"]
 
@@ -53,6 +54,7 @@ class Signup(Resource):
 class Login(Resource):
     @api.expect(login_model)
     def post(self):
+        '''Get user info and access token for a login request'''
         email = api.payload["email"]
         password = api.payload["password"]
 
