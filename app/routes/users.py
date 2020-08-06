@@ -10,7 +10,9 @@ model = api.model("User", {
                             "domicileType": fields.String( description="User domicile type."),
                             "phoneNumber": fields.String( description="User phone number."),
                             "password": fields.String( description="User Password."),
-                            })
+                            "imageURL": fields.String( description="User Image URL."),
+                         }
+                )
 
 @api.route("/<int:id>")
 @api.response(404, 'User not found')

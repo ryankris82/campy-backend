@@ -14,7 +14,6 @@ login_model = api.model("Login", {
 signup_model = api.clone("Signup", login_model, {
                             "firstName": fields.String(required=True, description="User first name."),
                             "lastName": fields.String(required=True, description="User last name."),
-                            "domicileType": fields.String(required=True, description="User domicile type."),
                             "phoneNumber": fields.String(required=True, description="User phone number."),
                             })
 
@@ -35,14 +34,12 @@ class Signup(Resource):
             password = api.payload["password"]
             first_name = api.payload["firstName"]
             last_name = api.payload["lastName"]
-            domicile_type = api.payload["domicileType"]
             phoneNumber = api.payload["phoneNumber"]
             user = User(
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
                 password=password,
-                domicile_type=domicile_type,
                 phone_number=phoneNumber
                 )
 
