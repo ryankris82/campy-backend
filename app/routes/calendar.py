@@ -2,30 +2,49 @@ from app.models.models import db, Calendar
 from flask_restx import Resource, Namespace, fields
 import datetime
 
-api = Namespace('locations', description='Calendar operations')
+api = Namespace('calendar', description='Calendar operations')
 
+# expected information
 model = api.model("Calendar",
                 {
-                    "start_date": fields.Date(required=True, description="Calendar start date")
-                    "end_date": fields.Date(required=True, description="Calendar end date")
-                    "location_id": fields.Integer(required=True, description="Calendar location")
-                    "user_id": fields.Integer(required=True, description="Calendar user")
+                    "start_date": fields.Date(required=True, description="Calendar start date"),
+                    "end_date": fields.Date(required=True, description="Calendar end date"),
+                    "location_id": fields.Integer(required=True, description="Calendar location"),
+                    "user_id": fields.Integer(required=True, description="Calendar user"),
                 }
 )
 
 @api.route("/")
 class Calendars(Resource):
     '''Get all Scheduled Calendar Ranges'''
-    def get(self):
+    def get(self, location_id):
         '''Get all Calendar Bookings'''
-        dates = Calendar.query.all()
+        dates = Calendar.query.filter_by(location_id=location_id).all()
+
         data = [day.to_dictionary() for day in dates]
         return {"dates": data}
 
-    # @api.expect(model)
-    # def post(self):
-    #     '''Create a new calendar booking with the provided date range'''
-    #     data = api.payload
+    @api.expect(model)
+    def post(self, location_id):
+        '''Create a new calendar booking with the provided date range'''
+        data = api.payload
+        print(data)
+        dates = Calendar.query.filter_by(location_id=location_id).all()
+        print(dates)
+        if bool(dates) == False:
+            calendar = Calendar(**data)
+            db.session.add(calendar)
+            db.session.commit()
+
+            return {"Message": "Successfully scheduled!"}
+        else:
+            return {"Message": "TODO"}
+
+        # get the calendar for the location
+
+        # if nothing found, safe to post
+        # else need to check if the dates are available if true we can post
+
 
     #     calendar_data={
     #         "start_date":data["start_date"],

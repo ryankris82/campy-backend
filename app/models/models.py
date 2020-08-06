@@ -61,12 +61,12 @@ class Calendar(db.Model):
 
     def to_dictionary(self):
         return {
-            "start_date": self.start_date,
-            "end_date": self.end_date,
-            "location_address": self.location.address,
-            "location_city": self.location.city,
-            "location_state": self.location.state,
-            "location_description": self.location.description,
+            "start_date": json.dumps(self.start_date.__str__()),
+            "end_date": json.dumps(self.end_date.__str__()),
+            "location_address": self.locations.address,
+            "location_city": self.locations.city,
+            "location_state": self.locations.state,
+            "location_description": self.locations.description,
             "user_first_name": self.user.first_name,
             "user_last_name": self.user.last_name,
         }
