@@ -19,11 +19,8 @@ flask-migrate = "*"
 flask-restful = "*"
 flask-jwt-extended = "*"
 flask-restx = "*"
-<<<<<<< HEAD
 gunicorn = "*"
-=======
 flask-cors = "*"
->>>>>>> master
 
 [requires]
 python_version = "3.8"
