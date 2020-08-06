@@ -1,7 +1,7 @@
 from app.models.models import db, Location, Amenity, Necessity, User
 from flask_restx import Resource, Namespace, fields
 
-api = Namespace('locations', description='Locations related operations')
+api = Namespace('locations', description='Locations create, read, update and delete operations')
 
 model = api.model("Location",
                         {
@@ -152,16 +152,34 @@ class LocationById(Resource):
             location.active = data["active"]
             location.user = User.query.get(data["user_id"])
 
-            location.amenity = Amenity.query.filter_by(
-            electric_hookup = data["electric_hookup"],
-            water_hookup = data["water_hookup"],
-            septic_hookup = data["septic_hookup"],
-            assigned_parking = data["assigned_parking"],
-            tow_vehicle_parking = data["tow_vehicle_parking"],
-            trash_removal = data["trash_removal"],
-            pets_allowed = data["pets_allowed"],
-            internet_access = data["internet_access"]).first() if None else Amenity(**amenity_data)
+            amenity_data= {
+                "electric_hookup":data["electric_hookup"],
+                "water_hookup":data["water_hookup"],
+                "septic_hookup":data["septic_hookup"],
+                "assigned_parking":data["assigned_parking"],
+                "tow_vehicle_parking":data["tow_vehicle_parking"],
+                "trash_removal":data["trash_removal"],
+                "pets_allowed":data["pets_allowed"],
+                "internet_access":data["internet_access"]
+            }
 
+            location.amenity = Amenity.query.filter_by(
+                electric_hookup = data["electric_hookup"],
+                water_hookup = data["water_hookup"],
+                septic_hookup = data["septic_hookup"],
+                assigned_parking = data["assigned_parking"],
+                tow_vehicle_parking = data["tow_vehicle_parking"],
+                trash_removal = data["trash_removal"],
+                pets_allowed = data["pets_allowed"],
+                internet_access = data["internet_access"]).first() if None else Amenity(**amenity_data)
+
+            necessity_data = {
+                "rv_compatible":data["rv_compatible"],
+                "generators_allowed":data["generators_allowed"],
+                "fires_allowed":data["fires_allowed"],
+                "max_days":data["max_days"],
+                "pad_type":data["pad_type"],
+            }
 
             location.necessity = Necessity.query.filter_by(
                 rv_compatible = data["rv_compatible"],
