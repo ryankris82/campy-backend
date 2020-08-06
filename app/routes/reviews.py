@@ -2,7 +2,7 @@ from app.models.models import db, Review, Location
 from flask_restx import Resource, Namespace, fields
 
 
-api = Namespace('reviews', description='Create and update location reviews')
+api = Namespace('reviews', description='Create, update and delete location reviews')
 
 model = api.model("Review",
                         {
@@ -23,12 +23,13 @@ model = api.model("Review",
 class Reviews(Resource):
     def get(self, location_id):
         '''Get all the reviews for the location'''
-        reviews = Review.query.filter(location_id==location_id).all()
+        reviews = Review.query.filter_by(location_id=location_id).all()
         data = [review.to_dictionary() for review in reviews]
         return {"reviews": data}
 
     @api.expect(model)
     def post(self, location_id):
+        '''Create a new review for the location'''
         data = api.payload
         data["location"] = Location.query.get(int(location_id))
         review = Review(**data)
@@ -59,7 +60,6 @@ class ReviewsById(Resource):
             return {"message": "Locations not found!"}, 404
 
 
-    @api.expect(model)
     def delete(self, location_id, id):
         '''Delete Review record for the provided location id'''
         review = Review.query.get(int(id))

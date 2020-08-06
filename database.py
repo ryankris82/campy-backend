@@ -58,6 +58,17 @@ with app.app_context():
         createdAt='2021-02-15'
     )
 
+    user5 = User(
+        first_name='Demo',
+        last_name='User',
+        hashed_password='pbkdf2:sha256:150000$7FTGE2c3$1ea0371496f82b298ae582f944120a614cb3e60974c4124bf7ef142fe6a1da90 ',
+        email="demo@email.com",
+        domicile_type='car',
+        phone_number='555-555-5555',
+        user_info='I\'m a demo user...take a look around.',
+        createdAt='2021-02-15'
+    )
+
     location1_amenity = Amenity(
         electric_hookup=True,
         water_hookup=True,
