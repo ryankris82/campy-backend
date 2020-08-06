@@ -2,7 +2,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from datetime import datetime
 import json
-from json import JSONEncoder
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
@@ -191,11 +190,6 @@ class Review(db.Model):
 
     def __repr__(self):
         return f'<Reviews: {self.overall_rating}, {self.comments} >'
-
-    def date_convertor(self, date):
-        if isinstance(date, datetime.datetime):
-            return date.__str__()
-
 
     def to_dictionary(self):
         return {
