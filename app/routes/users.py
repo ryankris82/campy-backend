@@ -1,7 +1,7 @@
 from app.models.models import db, User
 from flask_restx import Resource, Namespace, fields
 
-api = Namespace('users', description='Users related operations')
+api = Namespace('users', description='Create and update user operations')
 
 model = api.model("User", {
                             "firstName": fields.String( description="User first name."),
@@ -19,6 +19,7 @@ class GetUser(Resource):
     @api.response(200, 'User found')
     @api.doc('get_user')
     def get(self, id):
+        '''Get user by user id'''
         user = User.query.get(int(id))
         if user == None:
             return {"message": "no user found for the requested id"}, 404
@@ -28,6 +29,7 @@ class GetUser(Resource):
     @api.response(201, 'User record updated')
     @api.expect(model)
     def put(self, id):
+        '''Update user record by user id'''
         user = User.query.get(int(id))
         if user == None:
             return {"message": "no user found for the requested id"}
