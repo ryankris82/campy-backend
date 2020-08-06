@@ -1,49 +1,44 @@
-from flask import Blueprint, render_template, jsonify, request
 from app.models.models import db, User
-from flask_jwt_extended import  jwt_required
+from flask_restx import Resource, Namespace, fields
 
-bp = Blueprint("users", __name__, url_prefix="/users")
+api = Namespace('users', description='Users related operations')
 
+model = api.model("User", {
+                            "firstName": fields.String( description="User first name."),
+                            "lastName": fields.String( description="User last name."),
+                            "userInfo": fields.String( description="User information."),
+                            "domicileType": fields.String( description="User domicile type."),
+                            "phoneNumber": fields.String( description="User phone number."),
+                            "password": fields.String( description="User Password."),
+                            })
 
-@bp.route("/<user_id>", methods=["GET"])
-@jwt_required
-def get_one_user(user_id):
-    user = User.query.get(int(user_id))
-    if user == None:
-        return jsonify({"message": "no user found for the requested id"})
+@api.route("/<int:id>")
+@api.response(404, 'User not found')
+@api.param('id', 'The user identifier')
+class GetUser(Resource):
+    @api.response(200, 'User found')
+    @api.doc('get_user')
+    def get(self, id):
+        user = User.query.get(int(id))
+        if user == None:
+            return {"message": "no user found for the requested id"}, 404
 
-    return jsonify({"user":user.to_dictionary()})
+        return {"user":user.to_dictionary()}
+    @api.doc('update_user')
+    @api.response(201, 'User record updated')
+    @api.expect(model)
+    def put(self, id):
+        user = User.query.get(int(id))
+        if user == None:
+            return {"message": "no user found for the requested id"}
 
-@bp.route("/<user_id>", methods=["PUT"])
-@jwt_required
-def update_user(user_id):
-    user = User.query.get(int(user_id))
-    if user == None:
-        return jsonify({"message": "no user found for the requested id"})
-    if request.is_json:
-        image = request.json["image"]
-        password = request.json["password"]
-        phone_number = request.json["phoneNumber"]
-        user_Info = request.json["userInfo"]
-        domicile_type = request.json["domicileType"]
-        first_name = request.json["firstName"]
-        last_name = request.json["lastName"]
-    else:
-        image = request.form["image"]
-        password = request.form["password"]
-        phone_number = request.form["phoneNumber"]
-        user_Info = request.form["userInfo"]
-        domicile_type = request.form["domicileType"]
-        first_name = request.form["firstName"]
-        last_name = request.form["lastName"]
+        user.image_url = api.payload["image_url"]
+        user.password = api.payload["password"]
+        user.phone_number = api.payload["phoneNumber"]
+        user.user_Info = api.payload["userInfo"]
+        user.domicile_type = api.payload["domicileType"]
+        user.first_name = api.payload["firstName"]
+        user.last_name = api.payload["lastName"]
+        db.session.commit()
 
-    user.image = image
-    user.password = password
-    user.phone_number = phone_number
-    user.user_Info= user_Info
-    user.domicile_type = domicile_type
-    user.first_name = first_name
-    user.last_name = last_name
-    db.session.commit()
-
-    return jsonify(message="User record updated successfully.")
+        return {"message":"User record updated successfully."}
