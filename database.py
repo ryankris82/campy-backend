@@ -3,7 +3,7 @@ load_dotenv()
 
 from app import app, db
 from app.models.models import (
-    User, Calendar, Trip, 
+    User, Calendar, Trip,
     Amenity, Necessity, Location, Review)
 
 with app.app_context():
@@ -97,7 +97,7 @@ with app.app_context():
         max_days=5,
         pad_type='dirt'
     )
-    
+
     location1 = Location(
         address='10880 Malibu Point',
         city='Malibu',
@@ -115,7 +115,7 @@ with app.app_context():
         description='Has world class museums, and gardens. It has an well developed walkable river front on the edge of downtown where various events are held.',
         host_notes='I\'m sad, so sad'
     )
-    
+
     review1 = Review(
         overall_rating=4,
         noise=5,
@@ -147,11 +147,11 @@ with app.app_context():
     )
 
     location1.amenity = location1_amenity
-    location1.necessities = location1_neces
+    location1.necessity = location1_neces
     location1.user = user1
 
     location2.amenity = location2_amenity
-    location2.necessities = location2_neces
+    location2.necessity = location2_neces
     location2.user = user2
 
     review1.location = location1
