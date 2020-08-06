@@ -41,6 +41,9 @@ class User(db.Model):
             "last_name": self.last_name,
             "image_url": self.image_url,
             "user_info": self.user_info,
+            "email": self.email,
+            "domicile_type": self.domicile_type,
+            "phone_number": self.phone_number,
         }
 
 class Calendar(db.Model):
@@ -193,6 +196,7 @@ class Review(db.Model):
 
     def to_dictionary(self):
         return {
+            "id": self.id,
             "overall_rating": self.overall_rating,
             "noise": self.noise,
             "safety": self.safety,
