@@ -8,6 +8,7 @@ from flask_restx import Api
 from app.routes.auth import api as auth
 from app.routes.locations import api as locations
 from app.routes.users import api as users
+from app.routes.reviews import api as reviews
 
 
 app = Flask(__name__)
@@ -21,6 +22,7 @@ api = Api(app)
 api.add_namespace(auth)
 api.add_namespace(locations)
 api.add_namespace(users)
+api.add_namespace(reviews, path="/locations/<int:location_id>/reviews")
 
 
 Migrate(app, db)
