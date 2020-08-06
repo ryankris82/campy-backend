@@ -55,6 +55,18 @@ class Calendar(db.Model):
         db.ForeignKey('users.id'),
         nullable=False)
 
+    def to_dictionary(self):
+        return {
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "location_address": self.location.address,
+            "location_city": self.location.city,
+            "location_state": self.location.state,
+            "location_description": self.location.description,
+            "user_first_name": self.user.first_name,
+            "user_last_name": self.user.last_name,
+        }
+
     user = db.relationship('User', backref='calendar', lazy=True)
     # backref establishes parent.children AND children.parent relationship meaning...
     # if you add <User instance> to <Calendar instance> by <Calendar instance>.user = <User instance>
