@@ -32,7 +32,7 @@ class GetUser(Resource):
         if user == None:
             return {"message": "no user found for the requested id"}
 
-        user.image = api.payload["image"]
+        user.image_url = api.payload["image_url"]
         user.password = api.payload["password"]
         user.phone_number = api.payload["phoneNumber"]
         user.user_Info = api.payload["userInfo"]
