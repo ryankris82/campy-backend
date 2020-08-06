@@ -15,6 +15,7 @@ model = api.model("User", {
                 )
 
 @api.route("/<int:id>")
+@api.param('id', 'User identifier')
 @api.response(404, 'User not found')
 @api.param('id', 'The user identifier')
 class GetUser(Resource):

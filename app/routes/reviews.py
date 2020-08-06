@@ -20,6 +20,7 @@ model = api.model("Review",
 
 @api.route("/")
 @api.response(404, 'Review not found')
+@api.param('location_id', 'The location identifier')
 class Reviews(Resource):
     def get(self, location_id):
         '''Get all the reviews for the location'''
@@ -40,6 +41,8 @@ class Reviews(Resource):
 
 @api.route("/<int:id>")
 @api.response(404, 'Review not found')
+@api.param('id', 'The review identifier')
+@api.param('location_id', 'The location identifier')
 class ReviewsById(Resource):
     @api.expect(model)
     def put(self, location_id, id):

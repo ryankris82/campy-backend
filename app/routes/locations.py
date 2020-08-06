@@ -124,6 +124,7 @@ class Locations(Resource):
 
 @api.route("/<int:id>")
 @api.response(404, 'Location not found')
+@api.param('id', 'The location identifier')
 class LocationById(Resource):
     def get(self, id):
         '''Get location information for the provided location id'''
