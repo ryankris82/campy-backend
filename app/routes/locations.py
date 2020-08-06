@@ -1,7 +1,7 @@
 from app.models.models import db, Location, Amenity, Necessity, User
 from flask_restx import Resource, Namespace, fields
 
-api = Namespace('locations', description='Locations related operations')
+api = Namespace('locations', description='Locations create, read, update and delete operations')
 
 model = api.model("Location",
                         {
