@@ -2,7 +2,7 @@ from app.models.models import db, Review, Location
 from flask_restx import Resource, Namespace, fields
 
 
-api = Namespace('reviews', description='Create and update location reviews')
+api = Namespace('reviews', description='Creat, update and delete location reviews')
 
 model = api.model("Review",
                         {
@@ -29,6 +29,7 @@ class Reviews(Resource):
 
     @api.expect(model)
     def post(self, location_id):
+        '''Create a new review for the location'''
         data = api.payload
         data["location"] = Location.query.get(int(location_id))
         review = Review(**data)
