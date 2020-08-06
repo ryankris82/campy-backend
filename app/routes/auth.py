@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, url_for, request
 from app.models.models import db, User
-from flask_jwt_extended import  JWTManager, jwt_required, create_access_token
+from flask_jwt_extended import  JWTManager, create_access_token
 from flask_restx import Resource, Namespace, fields
 
 

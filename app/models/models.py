@@ -12,9 +12,9 @@ class User(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     hashed_password = db.Column(db.String(100), nullable=False)
-    image = db.Column(db.String(255))
+    image_url = db.Column(db.String(255))
     email = db.Column(db.String(100), unique=True, nullable=False)
-    domicile_type = db.Column(db.String(100), nullable=False)
+    domicile_type = db.Column(db.String(100))
     phone_number = db.Column(db.String(20), nullable=False)
     user_info = db.Column(db.String(2000))
     createdAt = db.Column(db.DateTime, default=datetime.utcnow)
@@ -38,7 +38,7 @@ class User(db.Model):
         return {
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "image": self.image,
+            "image_url": self.image_url,
             "user_info": self.user_info,
         }
 
@@ -115,7 +115,7 @@ class Location(db.Model):
     city = db.Column(db.String(50), nullable=False)
     state = db.Column(db.String(20), nullable=False)
     gps_coords = db.Column(db.String(100), nullable=False)
-    images = db.Column(db.ARRAY(db.String(255)))
+    image_urls = db.Column(db.ARRAY(db.String(255)))
     # ARRAY types only supported in Postgres
     website = db.Column(db.String(255))
     description = db.Column(db.String(2000))
@@ -139,7 +139,7 @@ class Location(db.Model):
             "city": self.city,
             "state": self.state,
             "gps_coords": self.gps_coords,
-            "images": self.images,
+            "image_urls": self.image_urls,
             "website": self.website,
             "description": self.description,
             "host_notes": self.host_notes,

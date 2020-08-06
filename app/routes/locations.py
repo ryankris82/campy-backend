@@ -9,7 +9,7 @@ model = api.model("Location",
                         "city": fields.String(required=True, description="Location city."),
                         "state": fields.String(required=True, description="Location state."),
                         "gps_coords": fields.String(required=True, description="Location GPS Coordinates."),
-                        "images": fields.List(fields.String( description="Location images.")),
+                        "image_urls": fields.List(fields.String( description="Location image URLs.")),
                         "website": fields.String( description="Location website."),
                         "description": fields.String(required=True, description="Location Description."),
                         "host_notes": fields.String( description="Location Host notes."),
@@ -145,7 +145,7 @@ class LocationById(Resource):
             location.city = data["city"]
             location.state = data["state"]
             location.gps_coords = data["gps_coords"]
-            location.images = data["images"]
+            location.image_urls = data["image_urls"]
             location.website = data["website"]
             location.description = data["description"]
             location.host_notes = data["host_notes"]
