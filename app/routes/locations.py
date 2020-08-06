@@ -1,9 +1,10 @@
 from flask import Blueprint, url_for, redirect, request, jsonify
 from app.models.models import db, Location, Amenity, Necessity
 from flask_jwt_extended import  jwt_required
-# from app import api
+from flask_restx import Resource, Namespace, fields
 
-bp = Blueprint("locations", __name__, url_prefix="/locations")
+api = Namespace('/locations', description='Locations related operations')
+
 
 # @api.route("/", methods=["GET"])
 # class Location(Re)
