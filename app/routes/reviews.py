@@ -2,7 +2,7 @@ from app.models.models import db, Review, Location
 from flask_restx import Resource, Namespace, fields
 
 
-api = Namespace('reviews', description='Creat, update and delete location reviews')
+api = Namespace('reviews', description='Create, update and delete location reviews')
 
 model = api.model("Review",
                         {
