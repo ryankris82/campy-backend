@@ -43,7 +43,6 @@ class GetUser(Resource):
         user.domicile_type = api.payload["domicileType"]
         user.first_name = api.payload["firstName"]
         user.last_name = api.payload["lastName"]
-        user.image_url = api.payload["imageURL"]
         db.session.commit()
 
         return {"message":"User record updated successfully."}
