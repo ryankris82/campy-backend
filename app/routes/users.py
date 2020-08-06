@@ -1,6 +1,4 @@
-from flask import Blueprint, render_template, jsonify, request
 from app.models.models import db, User
-from flask_jwt_extended import  jwt_required
 from flask_restx import Resource, Namespace, fields
 
 api = Namespace('users', description='Users related operations')
@@ -15,10 +13,8 @@ model = api.model("User", {
                             })
 
 @api.route("/<int:id>")
-
 @api.response(404, 'User not found')
-@api.param('id', 'The task identifier')
-# @jwt_required !!! TODO
+@api.param('id', 'The user identifier')
 class GetUser(Resource):
     @api.response(200, 'User found')
     @api.doc('get_user')

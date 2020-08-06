@@ -1,102 +1,187 @@
-from flask import Blueprint, url_for, redirect, request, jsonify
-from app.models.models import db, Location, Amenity, Necessity
-from flask_jwt_extended import  jwt_required
+from app.models.models import db, Location, Amenity, Necessity, User
 from flask_restx import Resource, Namespace, fields
 
-api = Namespace('/locations', description='Locations related operations')
+api = Namespace('locations', description='Locations related operations')
+
+model = api.model("Location",
+                        {
+                        "address": fields.String(required=True, description="Location address."),
+                        "city": fields.String(required=True, description="Location city."),
+                        "state": fields.String(required=True, description="Location state."),
+                        "gps_coords": fields.String(required=True, description="Location GPS Coordinates."),
+                        "images": fields.List(fields.String( description="Location images.")),
+                        "website": fields.String( description="Location website."),
+                        "description": fields.String(required=True, description="Location Description."),
+                        "host_notes": fields.String( description="Location Host notes."),
+                        "active": fields.Boolean( description="Location active."),
+                        "user_id": fields.Integer(required=True, description="Location Host User Id."),
+
+                        "electric_hookup":  fields.Boolean(required=True, description="Does location have electric hookup?"),
+                        "water_hookup":  fields.Boolean(required=True, description="Does location have water hookup?"),
+                        "septic_hookup":  fields.Boolean(required=True, description="Does location have septic hookup?"),
+                        "assigned_parking":  fields.Boolean(required=True, description="Does location have an assigned parking?"),
+                        "tow_vehicle_parking":  fields.Boolean(required=True, description="Does location have a tow vehicle parking?"),
+                        "trash_removal":  fields.Boolean(required=True, description="Does location have trash removal?"),
+                        "water_front":  fields.Boolean(required=True, description="Is location a water front?"),
+                        "pets_allowed":  fields.Boolean(required=True, description="Does location allow pets?"),
+                        "internet_access":  fields.Boolean(required=True, description="Does location have internet access?"),
+                        "tow_vehicle_parking":  fields.Boolean(required=True, description="Does location have a tow vehicle parking?"),
+
+                        "rv_compatible":  fields.Boolean(required=True, description="Is location  RV compatible."),
+                        "generators_allowed":  fields.Boolean(required=True, description="Does location allow generators?"),
+                        "fires_allowed":  fields.Boolean(required=True, description="Does location allow fires?"),
+                        "max_days":  fields.Integer(required=True, description="Location's maximum stay days."),
+                        "pad_type":  fields.String(required=True, description="Location's pad type."),
+                        }
+                )
 
 
-# @api.route("/", methods=["GET"])
-# class Location(Re)
-# def get_all_locations():
-#     locations = Location.query.all()
-#     data = [location.to_dictionary() for location in locations]
-#     return {"locations":data}
+@api.route("/")
+class Locations(Resource):
+    def get(self):
+        '''Get all locations.'''
+        locations = Location.query.all()
+        data = [location.to_dictionary() for location in locations]
+        return {"locations": data}
 
-# @bp.route("/", methods=["GET"])
-# def get_location(location_id):
-#     # get location by location_id
-#     location = Location.query.filter_by(location_id).one()
-#     return jsonify(location)
+    @api.expect(model)
+    def post(self):
+        '''Create a new location to enjoy with the provided amenities, necessities data.'''
+        data = api.payload
 
-# @bp.route("/", methods=["POST"])
-# def create_location():
-#     # obtain request data for location
-#     if request:
-#         data = request # obtain data from the form
-#         # construct of location with form data
-#         location = Location(data.address, data.city, data.state, data.gps_coords, data.images, data.website, data.description, data.host_notes, data.active)
-#         amenities = Amenity(data.electric_hookup, data.water_hookup, data.septic_hookup, data.assigned_parking, data.tow_vehicle_parking, data.trash_removal, data.water_front, data.pets_allowed, data.internet_access)
-#         necessities = Necessity(data.rv_compatible, data.generators_allowed, data.fires_allowed, data.max_days, data.pet_type)
-#         # add and commit to the database
-#         db.session.add(location)
-#         db.session.add(amenities)
-#         db.session.add(necessities)
-#         db.session.commit()
-#     else:
-#         return jsonify("Bad Data")
+        amenity_data= {
+            "electric_hookup":data["electric_hookup"],
+            "water_hookup":data["water_hookup"],
+            "septic_hookup":data["septic_hookup"],
+            "assigned_parking":data["assigned_parking"],
+            "tow_vehicle_parking":data["tow_vehicle_parking"],
+            "trash_removal":data["trash_removal"],
+            "pets_allowed":data["pets_allowed"],
+            "internet_access":data["internet_access"]
+        }
 
-# @bp.route("/<int:location_id>", methods=["PUT"])
-# # Update a location with new data
-# def edit_location(location_id):
-#     # Get the location to edit by id
-#     if request.id == location_id:
-#         data = request
-#         # Get the location to update by its id
-#         updateLoc = Location.query.filter_by(id=location_id).first()
-#         # Get the amenities by the location's foreign key for amenities
-#         updateAmen = Amenities.query.filter_by(id=updateLoc.amenities_id).first()
-#         # Get the amenities by the location's foreign key for necessities
-#         updateNeci = Necessities.query.filter_by(id=updateLoc.necessities_id).first()
+        # Check the database for the amenity record with the provided data
+        # if a record is not found then create an Amenity record with the provided data
+        amenity = Amenity.query.filter_by(
+           electric_hookup = amenity_data["electric_hookup"],
+           water_hookup = amenity_data["water_hookup"],
+           septic_hookup = amenity_data["septic_hookup"],
+           assigned_parking = amenity_data["assigned_parking"],
+           tow_vehicle_parking = amenity_data["tow_vehicle_parking"],
+           trash_removal = amenity_data["trash_removal"],
+           pets_allowed = amenity_data["pets_allowed"],
+           internet_access = amenity_data["internet_access"]).first() if None else Amenity(**amenity_data)
 
-#         # update the retrieved rows in these tables (location, amenities, and necessities) with the request data
-#         updateLoc = {
-#             'address': data.address,
-#             'city': data.city,
-#             'state': data.state,
-#             'gps_coords': data.gps_coords,
-#             'images': data.images,
-#             'website': data.website,
-#             'description': data.description,
-#             'host_notes': data.host_notes,
-#             'active': data.active,
-#         }
+        data["amenity"]= amenity
 
-#         updateAmen = {
-#             'electric_hookup': data.electric_hookup,
-#             'water_hookup': data.water_hookup,
-#             'septic_hookup': data.septic_hookup,
-#             'assigned_parking': data.assigned_parking,
-#             'tow_vehicle_parking': data.tow_vehicle_parking,
-#             'trash_removal': data.trash_removal,
-#             'water_front': data.water_front,
-#             'pets_allowed': data.pets_allowed,
-#             'internet_access': data.internet_access,
-#         }
 
-#         updateNeci = {
-#             'rv_compatible': data.electric_hookup,
-#             'generators_allowed': data.generators_allowed,
-#             'fires_allowed': data.fires_allowed,
-#             'max_days': data.max_days,
-#             'pad_type': data.pad_type,
-#         }
+        necessity_data = {
+            "rv_compatible":data["rv_compatible"],
+            "generators_allowed":data["generators_allowed"],
+            "fires_allowed":data["fires_allowed"],
+            "max_days":data["max_days"],
+            "pad_type":data["pad_type"],
+        }
 
-#         # commit the above changes to the database
-#         db.session.commit()
 
-# @bp.route("/<int:location_id", methods=['DELETE'])
-# # Delete a location and it's dependent Amenities and Necessities rows.
-# def delete_location_by_id(location_id):
-#     if request.id == location_id:
-#         # obtain the 3 rows of data in these 3 rel. tables (location, amenities, and necessities)
-#         location_to_del = Location.query.filter_by(location_id).first()
-#         amenities_to_del = Amenities.query.filter_by(location_to_del.amenities_id).first()
-#         necessities_to_del = Necessities.query.filter_by(location_to_del.necessities_id).first()
+        # Check the database for the amenity record with the provided data
+        # if a record is not found then create an Amenity record with the provided data
+        necessity = Necessity.query.filter_by(
+            rv_compatible = necessity_data["rv_compatible"],
+            generators_allowed = necessity_data["generators_allowed"],
+            fires_allowed = necessity_data["fires_allowed"],
+            max_days = necessity_data["max_days"],
+            pad_type = necessity_data["pad_type"]).first() if None else Necessity(**necessity_data)
 
-#         # look into way to DRY up these 3 lines
-#         db.session.delete(necessities_to_del)
-#         db.session.delete(amenities_to_del)
-#         db.session.delete(location_to_del)
+        data["necessity"]= necessity
 
-#         db.session.commit()
+        data["user"]=User.query.get(data["user_id"])
+
+        # Clean up the data variable to contain only information needed to create
+        #  the Location record using the ** operator (like a spread operation)
+        data.pop("user_id")
+        data.pop("electric_hookup")
+        data.pop("water_hookup")
+        data.pop("septic_hookup")
+        data.pop("assigned_parking")
+        data.pop("tow_vehicle_parking")
+        data.pop("trash_removal")
+        data.pop("water_front")
+        data.pop("pets_allowed")
+        data.pop("internet_access")
+
+        data.pop("rv_compatible")
+        data.pop("generators_allowed")
+        data.pop("fires_allowed")
+        data.pop("max_days")
+        data.pop("pad_type")
+
+        location = Location(**data)
+        db.session.add(location)
+        db.session.commit()
+
+        return {"message": "Locations was successfully created!"}
+
+@api.route("/<int:id>")
+@api.response(404, 'Location not found')
+class LocationById(Resource):
+    def get(self, id):
+        '''Get location information for the provided location id'''
+        location = Location.query.get(int(id))
+        if location:
+            return {"location":location.to_dictionary()}
+        else:
+            return {"message": "Locations not found!"}, 404
+
+
+    @api.expect(model)
+    def put(self, id):
+        '''Update location by location id using the data passed in'''
+        location = Location.query.get(int(id))
+        if location:
+            data = api.payload
+
+            location.address = data["address"]
+            location.city = data["city"]
+            location.state = data["state"]
+            location.gps_coords = data["gps_coords"]
+            location.images = data["images"]
+            location.website = data["website"]
+            location.description = data["description"]
+            location.host_notes = data["host_notes"]
+            location.active = data["active"]
+            location.user = User.query.get(data["user_id"])
+
+            location.amenity = Amenity.query.filter_by(
+            electric_hookup = data["electric_hookup"],
+            water_hookup = data["water_hookup"],
+            septic_hookup = data["septic_hookup"],
+            assigned_parking = data["assigned_parking"],
+            tow_vehicle_parking = data["tow_vehicle_parking"],
+            trash_removal = data["trash_removal"],
+            pets_allowed = data["pets_allowed"],
+            internet_access = data["internet_access"]).first() if None else Amenity(**amenity_data)
+
+
+            location.necessity = Necessity.query.filter_by(
+                rv_compatible = data["rv_compatible"],
+                generators_allowed = data["generators_allowed"],
+                fires_allowed = data["fires_allowed"],
+                max_days = data["max_days"],
+                pad_type = data["pad_type"]).first() if None else Necessity(**necessity_data)
+
+            db.session.commit()
+
+            return {"message": "Locations was successfully updated!"}
+        else:
+            return {"message": "Locations not found!"}, 404
+
+    def delete(self, id):
+        '''Delete Location record for the provided location id'''
+        location = Location.query.get(int(id))
+        if location:
+            db.session.delete(location)
+            db.session.commit()
+            return {"message": "Location deleted successfully."}
+        else:
+            return {"message": "Locations not found!"}, 404
