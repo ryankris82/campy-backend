@@ -10,7 +10,9 @@ model = api.model("User", {
                             "domicileType": fields.String( description="User domicile type."),
                             "phoneNumber": fields.String( description="User phone number."),
                             "password": fields.String( description="User Password."),
-                            })
+                            "imageURL": fields.String( description="User Image URL."),
+                         }
+                )
 
 @api.route("/<int:id>")
 @api.response(404, 'User not found')
@@ -41,6 +43,7 @@ class GetUser(Resource):
         user.domicile_type = api.payload["domicileType"]
         user.first_name = api.payload["firstName"]
         user.last_name = api.payload["lastName"]
+        user.image_url = api.payload["imageURL"]
         db.session.commit()
 
         return {"message":"User record updated successfully."}
