@@ -47,7 +47,7 @@ class Calendars(Resource):
             req_start_date = datetime.datetime.strptime(data["start_date"], "%Y-%m-%d").date()
             req_end_date = datetime.datetime.strptime(data["end_date"], "%Y-%m-%d").date()
             if (req_start_date > req_end_date):
-                return {"message": "You must choose a start date before your end date"}
+                return {"message": "You must choose a start date before your end date"}, 400
 
             for date in locationDates:
                 start = date.start_date
