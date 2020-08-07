@@ -46,6 +46,8 @@ class Calendars(Resource):
             # get the api payload data for the requested start and end date and convert to datetime from string
             req_start_date = datetime.datetime.strptime(data["start_date"], "%Y-%m-%d").date()
             req_end_date = datetime.datetime.strptime(data["end_date"], "%Y-%m-%d").date()
+            if (req_start_date > req_end_date):
+                return {"message": "You must choose a start date before your end date"}
 
             for date in locationDates:
                 start = date.start_date
@@ -53,8 +55,6 @@ class Calendars(Resource):
                                                 # checks if the req time is within an existing time block                    # checks if the req time envelopes an existing time block
                 if (req_start_date >= start and req_start_date <= end) or (req_end_date >= start and req_end_date <= end) or (req_start_date <= start and req_end_date >= end):
                     return {"message": "Chosen date range is unavailable"}
-                if (req_start_date > req_end_date):
-                    return {"message": "You must choose a start date before your end date"}
             # if the requested dates do not envelope or are enveloped by an existing date range, commit the selected dates to the database
             calendar = Calendar(**data)
             db.session.add(calendar)
