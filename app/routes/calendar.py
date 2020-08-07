@@ -61,7 +61,7 @@ class Calendars(Resource):
 
     @api.routes("/<int:id>")
     @api.response(404, "Calendar Booking not found")
-    class CalednarById(Resource):
+    class CalendarById(Resource):
         def get(self, id):
             '''Get a Calendar date for the provided id'''
             calendar_range = Calendar.query.get(int(id))
