@@ -29,7 +29,7 @@ class Calendars(Resource):
     def post(self, location_id):
         '''Create a new calendar booking with the provided date range'''
         data = api.payload
-        dates = Calendar.query.filter_by(location_id=location_id).first()
+        dates = Calendar.query.filter_by(location_id=location_id).all()
         start = dates.start_date
         end = dates.end_date
 
