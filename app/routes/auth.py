@@ -7,14 +7,14 @@ from flask_restx import Resource, Namespace, fields
 api = Namespace('auth', description='User authorization related operations')
 
 login_model = api.model("Login", {
-                            "email": fields.String(required=True, description="Unique email address."),
-                            "password": fields.String(required=True, description="User Password."),
+                            "email": fields.String(required=True, description="Unique email address.", example="demo@demo.com"),
+                            "password": fields.String(required=True, description="User Password.", example="password"),
                             })
 
 signup_model = api.clone("Signup", login_model, {
-                            "firstName": fields.String(required=True, description="User first name."),
-                            "lastName": fields.String(required=True, description="User last name."),
-                            "phoneNumber": fields.String(required=True, description="User phone number."),
+                            "firstName": fields.String(required=True, description="User first name.", example="Joana"),
+                            "lastName": fields.String(required=True, description="User last name.", example="Kamp"),
+                            "phoneNumber": fields.String(required=True, description="User phone number.", example="555-444-6666"),
                             })
 
 

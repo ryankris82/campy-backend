@@ -4,17 +4,18 @@ from flask_restx import Resource, Namespace, fields
 api = Namespace('users', description='Create and update user operations')
 
 model = api.model("User", {
-                            "firstName": fields.String( description="User first name."),
-                            "lastName": fields.String( description="User last name."),
-                            "userInfo": fields.String( description="User information."),
-                            "domicileType": fields.String( description="User domicile type."),
-                            "phoneNumber": fields.String( description="User phone number."),
-                            "password": fields.String( description="User Password."),
-                            "imageURL": fields.String( description="User Image URL."),
+                            "firstName": fields.String( description="User first name.", example="John"),
+                            "lastName": fields.String( description="User last name.", example="Doe"),
+                            "userInfo": fields.String( description="User information.", example = "I love the oudoors"),
+                            "domicileType": fields.String( description="User domicile type.", example = "RV"),
+                            "phoneNumber": fields.String( description="User phone number.", example="555-555-5555"),
+                            "password": fields.String( description="User Password.", example="password"),
+                            "imageURL": fields.String( description="User Image URL.", example="/image.png"),
                          }
                 )
 
 @api.route("/<int:id>")
+@api.param('id', 'User identifier')
 @api.response(404, 'User not found')
 @api.param('id', 'The user identifier')
 class GetUser(Resource):
@@ -27,6 +28,8 @@ class GetUser(Resource):
             return {"message": "no user found for the requested id"}, 404
 
         return {"user":user.to_dictionary()}
+
+
     @api.doc('update_user')
     @api.response(201, 'User record updated')
     @api.expect(model)
@@ -36,10 +39,10 @@ class GetUser(Resource):
         if user == None:
             return {"message": "no user found for the requested id"}
 
-        user.image_url = api.payload["image_url"]
+        user.image_url = api.payload["imageURL"]
         user.password = api.payload["password"]
         user.phone_number = api.payload["phoneNumber"]
-        user.user_Info = api.payload["userInfo"]
+        user.user_info = api.payload["userInfo"]
         user.domicile_type = api.payload["domicileType"]
         user.first_name = api.payload["firstName"]
         user.last_name = api.payload["lastName"]
