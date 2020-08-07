@@ -22,7 +22,7 @@ class Calendars(Resource):
         dates = Calendar.query.filter_by(location_id=location_id).all()
 
         data = [day.to_dictionary() for day in dates]
-        # print(data["start_date"].split(" ").split("/"))
+        
         return {"dates": data}
 
     @api.expect(model)
