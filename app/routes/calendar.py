@@ -44,7 +44,7 @@ class Calendars(Resource):
 
             # make sure the start day is actually before the end date!!!
             if (req_start_date > req_end_date):
-                return {"message": "You must choose a start date before your end date"}
+                return {"message": "You must choose a start date before your end date"}, 400
 
             # get the max_days for the location and the number of days requested to schedule
             max_days = check_max_days(location_id)
