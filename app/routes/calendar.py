@@ -22,7 +22,7 @@ class Calendars(Resource):
         dates = Calendar.query.filter_by(location_id=location_id).all()
 
         data = [day.to_dictionary() for day in dates]
-        
+
         return {"dates": data}
 
     @api.expect(model)
@@ -58,3 +58,39 @@ class Calendars(Resource):
             db.session.add(calendar)
             db.session.commit()
             return {"Message": "Successfully scheduled!"}
+
+    @api.routes("/<int:id>")
+    @api.response(404, "Calendar Booking not found")
+    class CalednarById(Resource):
+        def get(self, id):
+            '''Get a Calendar date for the provided id'''
+            calendar_range = Calendar.query.get(int(id))
+            if calendar_range:
+                return {"calendar":calendar_range.to_dictionary()}
+            else:
+                return {"message": "Calendar Entry Not Found"}, 404
+        @api.expect(model)
+        def put(self, id):
+            '''Update calendar by calendar id using the data passed in'''
+            calendar_range = Calendar.query.get(int(id))
+            if calendar_range:
+                data = api.payload
+
+                calendar_range.start_date = data["start_date"]
+                calendar_range.end_date = data["end_date"]
+
+                db.session.commit()
+
+                return {"message": "Calendar Booking was successfully updated!"}
+            else:
+                return {"message": "Calendar Booking was not found"}, 404
+
+        def delete(self, id):
+            '''Delete Calendar Booking for the provided calendar id'''
+            calendar_range = Calendar.query.get(int(id))
+            if calendar_range:
+                db.session.delete(calendar_range)
+                db.session.commit()
+                return {"message": "Calendar Booking deleted successfully"}
+            else:
+                return {"message": "Calendar Booking not found, nothing deleted"}, 404
