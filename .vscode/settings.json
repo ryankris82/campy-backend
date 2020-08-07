@@ -1,8 +1,23 @@
 {
     "python.pythonPath": "/usr/bin/python3",
     "workbench.colorCustomizations": {
-        "activityBar.background": "#422714",
-        "titleBar.activeBackground": "#5C371D",
-        "titleBar.activeForeground": "#FDFAF8"
-    }
+      "activityBar.background": "#422714",
+      "titleBar.activeBackground": "#1b1008",
+      "titleBar.activeForeground": "#e7e7e7",
+      "activityBar.activeBackground": "#422714",
+      "activityBar.activeBorder": "#257a48",
+      "activityBar.foreground": "#e7e7e7",
+      "activityBar.inactiveForeground": "#e7e7e799",
+      "activityBarBadge.background": "#257a48",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "statusBar.background": "#1b1008",
+      "statusBar.border": "#1b1008",
+      "statusBar.foreground": "#e7e7e7",
+      "statusBarItem.hoverBackground": "#422714",
+      "tab.activeBorder": "#422714",
+      "titleBar.border": "#1b1008",
+      "titleBar.inactiveBackground": "#1b100899",
+      "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#1b1008"
 }
