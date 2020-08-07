@@ -1,6 +1,7 @@
 from app.models.models import db, Calendar
 from flask_restx import Resource, Namespace, fields
 import datetime
+from pandas as pd
 
 api = Namespace('calendar', description='Calendar operations')
 
@@ -22,23 +23,50 @@ class Calendars(Resource):
         dates = Calendar.query.filter_by(location_id=location_id).all()
 
         data = [day.to_dictionary() for day in dates]
+        # print(data["start_date"].split(" ").split("/"))
         return {"dates": data}
 
     @api.expect(model)
     def post(self, location_id):
         '''Create a new calendar booking with the provided date range'''
         data = api.payload
-        print(data)
-        dates = Calendar.query.filter_by(location_id=location_id).all()
-        print(dates)
+        dates = Calendar.query.filter_by(location_id=location_id).first()
+        start = dates.start_date
+        end = dates.end_date
+
+        print("Start", start)
+
         if bool(dates) == False:
             calendar = Calendar(**data)
             db.session.add(calendar)
             db.session.commit()
-
             return {"Message": "Successfully scheduled!"}
         else:
-            return {"Message": "TODO"}
+            # date_list = []
+            # date = start
+            # while date <= end:
+
+            locationDates = Calendar.query.filter_by(location_id=location_id).all()
+            req_start_date = data["start_date"]
+            req_end_date = data["end_date"]
+            # print("Location Dates", locationDates)
+            print("api payload data", data)
+            for date in locationDates:
+                start = date.start_date
+                end = date.end_date
+                # print(date)
+                print("Start", start)
+                print("End", end) # works up to here
+
+                if (req_start_date > start and start < req_end_date) or (req_end_date < end and end > req_start_date):
+                    calendar = Calendar(**data)
+                    db.session.add(calendar)
+                    db.session.commit()
+                    return {"Message": "Successfully scheduled!"}
+                return {"Message": "Chosen date range is unavailable"}
+
+                # print("Date", date.start_date)
+
 
         # get the calendar for the location
 

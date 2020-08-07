@@ -50,8 +50,8 @@ class Calendar(db.Model):
     __tablename__ = 'calendar'
 
     id = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.Date)
-    end_date = db.Column(db.Date)
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
     location_id = db.Column(db.Integer,
         db.ForeignKey('locations.id'),
         nullable=False)
