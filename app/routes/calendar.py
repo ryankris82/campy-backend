@@ -9,8 +9,8 @@ model = api.model("Calendar",
                 {
                     "start_date": fields.Date(required=True, description="Calendar start date"),
                     "end_date": fields.Date(required=True, description="Calendar end date"),
-                    "location_id": fields.Integer(required=True, description="Calendar location"),
-                    "user_id": fields.Integer(required=True, description="Calendar user"),
+                    "location_id": fields.Integer(required=True, description="Calendar location", example=1),
+                    "user_id": fields.Integer(required=True, description="Calendar user", example=1),
                 }
 )
 
