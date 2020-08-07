@@ -6,20 +6,21 @@ api = Namespace('reviews', description='Create, update and delete location revie
 
 model = api.model("Review",
                         {
-                        "overall_rating": fields.Integer(required=True, description="Location overall rating."),
-                        "noise": fields.Integer(required=True, description="Location Noise level."),
-                        "safety": fields.Integer(required=True, description="Location Safety level."),
-                        "cleanliness": fields.Integer(required=True, description="Location cleanliness level."),
-                        "access": fields.Integer(required=True, description="Location easy of access."),
-                        "site_quality": fields.Integer(required=True, description="Location site quality."),
-                        "user_id": fields.Integer(required=True, description="Reviewer Id."),
-                        "comments": fields.String(required=True, description="User's comments on the location")
+                        "overall_rating": fields.Integer(required=True, description="Location overall rating.", example=5 ),
+                        "noise": fields.Integer(required=True, description="Location Noise level.", example=5 ),
+                        "safety": fields.Integer(required=True, description="Location Safety level.", example=5 ),
+                        "cleanliness": fields.Integer(required=True, description="Location cleanliness level.", example=5 ),
+                        "access": fields.Integer(required=True, description="Location easy of access.", example=5 ),
+                        "site_quality": fields.Integer(required=True, description="Location site quality.", example=5 ),
+                        "user_id": fields.Integer(required=True, description="Reviewer Id.", example=1 ),
+                        "comments": fields.String(required=True, description="User's comments on the location", example="The best place ever!!! Thank you")
                         }
                 )
 
 
 @api.route("/")
 @api.response(404, 'Review not found')
+@api.param('location_id', 'The location identifier')
 class Reviews(Resource):
     def get(self, location_id):
         '''Get all the reviews for the location'''
@@ -40,6 +41,8 @@ class Reviews(Resource):
 
 @api.route("/<int:id>")
 @api.response(404, 'Review not found')
+@api.param('id', 'The review identifier')
+@api.param('location_id', 'The location identifier')
 class ReviewsById(Resource):
     @api.expect(model)
     def put(self, location_id, id):
