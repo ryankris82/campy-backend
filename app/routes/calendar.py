@@ -1,7 +1,6 @@
 from app.models.models import db, Calendar
 from flask_restx import Resource, Namespace, fields
 import datetime
-from pandas as pd
 
 api = Namespace('calendar', description='Calendar operations')
 
@@ -47,25 +46,37 @@ class Calendars(Resource):
             # while date <= end:
 
             locationDates = Calendar.query.filter_by(location_id=location_id).all()
-            req_start_date = data["start_date"]
-            req_end_date = data["end_date"]
+            # get the api payload data for the requested start and end date and convert to datetime from string
+            req_start_date = datetime.datetime.strptime(data["start_date"], "%Y-%m-%d").date()
+            req_end_date = datetime.datetime.strptime(data["end_date"], "%Y-%m-%d").date()
             # print("Location Dates", locationDates)
-            print("api payload data", data)
+
             for date in locationDates:
                 start = date.start_date
                 end = date.end_date
                 # print(date)
-                print("Start", start)
-                print("End", end) # works up to here
 
-                if (req_start_date > start and start < req_end_date) or (req_end_date < end and end > req_start_date):
-                    calendar = Calendar(**data)
-                    db.session.add(calendar)
-                    db.session.commit()
-                    return {"Message": "Successfully scheduled!"}
-                return {"Message": "Chosen date range is unavailable"}
+                print("==========================")
+                print("Date:", date)
+                print("length of location Dates", len(locationDates))
+                print("Start: date.start_date", start)
+                print("End: date.end_date", end)
+                print("Start: req_start_date", req_start_date)
+                print("End: req_end_date", req_end_date)
 
-                # print("Date", date.start_date)
+                        # checks if the req time is within an existing time block                                           # checks if the req time envelopes an existing time block
+                if (req_start_date >= start and req_start_date <= end) or (req_end_date >= start and req_end_date <= end) or (req_start_date <= start and req_end_date >= end):
+                    return {"Message": "Chosen date range is unavailable"}
+
+            calendar = Calendar(**data)
+            db.session.add(calendar)
+            db.session.commit()
+            return {"Message": "Successfully scheduled!"}
+
+            '''
+            Currently fails if requesting on a day that already has the same start and end date
+
+            '''
 
 
         # get the calendar for the location
