@@ -39,7 +39,7 @@ class Calendars(Resource):
             calendar = Calendar(**data)
             db.session.add(calendar)
             db.session.commit()
-            return {"Message": "Successfully scheduled!"}
+            return {"message": "Successfully scheduled!"}
         else:
             # get the calendar entries for a given location
             locationDates = Calendar.query.filter_by(location_id=location_id).all()
@@ -52,12 +52,14 @@ class Calendars(Resource):
                 end = date.end_date
                                                 # checks if the req time is within an existing time block                    # checks if the req time envelopes an existing time block
                 if (req_start_date >= start and req_start_date <= end) or (req_end_date >= start and req_end_date <= end) or (req_start_date <= start and req_end_date >= end):
-                    return {"Message": "Chosen date range is unavailable"}
+                    return {"message": "Chosen date range is unavailable"}
+                if (req_start_date > req_end_date):
+                    return {"message": "You must choose a start date before your end date"}
             # if the requested dates do not envelope or are enveloped by an existing date range, commit the selected dates to the database
             calendar = Calendar(**data)
             db.session.add(calendar)
             db.session.commit()
-            return {"Message": "Successfully scheduled!"}
+            return {"message": "Successfully scheduled!"}
 
     @api.routes("/<int:id>")
     @api.response(404, "Calendar Booking not found")
