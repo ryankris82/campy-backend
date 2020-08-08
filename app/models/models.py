@@ -50,14 +50,26 @@ class Calendar(db.Model):
     __tablename__ = 'calendar'
 
     id = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.Date)
-    end_date = db.Column(db.Date)
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
     location_id = db.Column(db.Integer,
         db.ForeignKey('locations.id'),
         nullable=False)
     user_id = db.Column(db.Integer,
         db.ForeignKey('users.id'),
         nullable=False)
+
+    def to_dictionary(self):
+        return {
+            "start_date": json.dumps(self.start_date.__str__()),
+            "end_date": json.dumps(self.end_date.__str__()),
+            "location_address": self.locations.address,
+            "location_city": self.locations.city,
+            "location_state": self.locations.state,
+            "location_description": self.locations.description,
+            "user_first_name": self.user.first_name,
+            "user_last_name": self.user.last_name,
+        }
 
     user = db.relationship('User', backref='calendar', lazy=True)
     # backref establishes parent.children AND children.parent relationship meaning...
