@@ -67,6 +67,7 @@ class Login(Resource):
                     "user_first_name":user.first_name,
                     "user_last_name":user.last_name,
                     "image_url": user.image_url,
+                    "domicile_type": user.domicile_type,
                 }
         else:
             return { "message":  "Bad email or password."} , 401
