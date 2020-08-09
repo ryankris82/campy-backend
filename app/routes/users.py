@@ -40,7 +40,6 @@ class GetUser(Resource):
             return {"message": "no user found for the requested id"}
 
         user.image_url = api.payload["imageURL"]
-        user.password = api.payload["password"]
         user.phone_number = api.payload["phoneNumber"]
         user.user_info = api.payload["userInfo"]
         user.domicile_type = api.payload["domicileType"]
