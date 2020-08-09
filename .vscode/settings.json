@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "python.pythonPath": "/usr/bin/python3",
     "workbench.colorCustomizations": {
       "activityBar.background": "#422714",
@@ -20,4 +21,7 @@
       "titleBar.inactiveForeground": "#e7e7e799"
     },
     "peacock.color": "#1b1008"
+=======
+    "python.pythonPath": "/usr/bin/python3"
+>>>>>>> 3d9d3e5bf0110f5ca519e50fcb5ab2fd48183fbc
 }
