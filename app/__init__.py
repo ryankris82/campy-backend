@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, jsonify
 from app.config import Configuration
-from app.models.models import db, User
+from app.models.models import db, User, Location
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -18,6 +18,10 @@ CORS(app, resources={r"/*": {"origins": "*", "supports_credentials": True}})
 jwt = JWTManager(app)
 app.config.from_object(Configuration)
 db.init_app(app)
+
+
+
+
 
 api = Api(app)
 api.add_namespace(auth)

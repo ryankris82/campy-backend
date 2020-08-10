@@ -47,4 +47,4 @@ class GetUser(Resource):
         user.last_name = api.payload["lastName"]
         db.session.commit()
 
-        return {"message":"User record updated successfully."}
+        return {"message": "User record updated successfully."}
